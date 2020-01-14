@@ -1,16 +1,16 @@
 import React from 'react';
 import Tilt from 'react-tilt';
 import './Logo.css';
-import './brainLogo.png';
 
 const Logo = () => {
-  return(
+  return (
     <div className=' ma4 mt0'>
-      <Tilt className="Tilt br2 shadow-2" options={{ max : 65 }} style={{ height: 250, width: 250 }} >
-        <div className="Tilt-inner">
+      <Tilt className="Tilt br2 shadow-2" options={{max: 65}} style={{height: 150, width: 150}}>
+        <div className="Tilt-inner pa3">
           <img
-            alt='Smart brain Logo'
+            alt=''
             src="brainLogo.png"
+            style={{height: 120, width: 120}}
           />
         </div>
       </Tilt>
