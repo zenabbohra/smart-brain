@@ -9,6 +9,7 @@ import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
 import Signin from '../components/Signin/Signin';
 import Register from '../components/Register/Register';
+import Entry from '../components/Entry/Entry';
 
 const app = new Clarifai.App({
   apiKey: 'de40d02dd82d4e4b826194bf1a7dfe20'
@@ -40,7 +41,14 @@ class App extends Component {
       input: '',
       box: {},
       isSignedIn: false,
-      page: 'sign in'
+      page: 'sign in',
+      user: {
+        name: '',
+        email: '',
+        password: '',
+        entries: 0,
+        joined_date: new Date()
+      }
     }
   }
 
@@ -49,7 +57,6 @@ class App extends Component {
     const image = document.getElementById('inputimage');
     const width = Number(image.width);
     const height = Number(image.height);
-    console.log('width', width, 'height', height, 'box:', clarifaiFace);
     return {
       leftCol: clarifaiFace.left_col * width,
       topRow: clarifaiFace.top_row * height,
@@ -61,7 +68,6 @@ class App extends Component {
 
   displayFaceBox = (boundingBox) => {
     this.setState({box: boundingBox});
-    console.log(this.state.box);
   };
 
   onInputChange = (event) => {
@@ -95,18 +101,28 @@ class App extends Component {
     this.setState({page: 'register'});
   };
 
+  loadUser = (reg_name, reg_email, reg_password) => {
+    this.setState({user: {
+        name: reg_name,
+        email: reg_email,
+        password: reg_password
+      }});
+    console.log(this.state.user);
+  };
+
   render() {
-    const {imageUrl, box, isSignedIn, page } = this.state;
+    const {imageUrl, box, isSignedIn, page, user } = this.state;
     return (
       <div>
         <Particles className='particles' params={particleOptions}/>
         {!isSignedIn && page==='sign in'
           ? <Signin onPageChange={this.onPageChange} goToRegisterPage={this.goToRegisterPage} />
           : !isSignedIn && page==='register'
-          ? <Register onPageChange={this.onPageChange}/>
+          ? <Register onPageChange={this.onPageChange} loadUser={this.loadUser}/>
           :  <div>
               <Navigation onPageChange={this.onPageChange} />
               <Logo />
+              <Entry name={user.name} entries={user.entries}/>
               <ImageUrlInput onInputChange={this.onInputChange} onButtonClick={this.onButtonClick} />
               <FaceRecognition imageUrl={imageUrl} box={box} />
             </div>
