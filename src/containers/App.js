@@ -109,19 +109,7 @@ class App extends Component {
       this.setState({isSignedIn: true});
     }
     this.setState({page: page});
-    // if (!this.state.isSignedIn) {
-    //   this.setState({isSignedIn: true});
-    //   this.setState({page: 'home'});
-    // }
-    // else {
-    //   this.setState({isSignedIn : false});
-    //   this.setState({page : 'sign in'});
-    // }
   };
-
-  // goToRegisterPage = () => {
-  //   this.setState({page: 'register'});
-  // };
 
   loadUser = (data) => {
     const {id, name, email, password, entries, joined} = data;

@@ -43,7 +43,7 @@ class Register extends Component {
           user.status(400).json('Incorrect inputs')
         }
       })
-      .catch(err=> console.log("couldn't register"));
+      .catch(err=> console.log("couldn't register", err));
   };
 
   render() {
