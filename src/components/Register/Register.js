@@ -37,7 +37,7 @@ class Register extends Component {
       .then(response => response.json())
       .then(user => {
         if(user.id){
-          onPageChange();
+          onPageChange('home');
           loadUser(user);
         }else{
           user.status(400).json('Incorrect inputs')

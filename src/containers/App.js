@@ -89,7 +89,7 @@ class App extends Component {
     //Updating the entry count each time the button is clicked
     fetch('http://localhost:3000/image', {
       method: 'PUT',
-      headers: {'Content-Type':'application/json'},
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         id: this.state.user.id
       })
@@ -101,49 +101,58 @@ class App extends Component {
       .catch(err => console.log(err))
   };
 
-  onPageChange = () => {
-    const { isSignedIn } = this.state;
-    if (!isSignedIn) {
+  onPageChange = (page) => {
+    console.log('page', page);
+    if (page === 'sign out') {
+      this.setState({isSignedIn: false});
+    } else if (page === 'home') {
       this.setState({isSignedIn: true});
-      this.setState({page: 'home'});
     }
-    else {
-      this.setState({isSignedIn : false});
-      this.setState({page : 'sign in'});
-    }
+    this.setState({page: page});
+    // if (!this.state.isSignedIn) {
+    //   this.setState({isSignedIn: true});
+    //   this.setState({page: 'home'});
+    // }
+    // else {
+    //   this.setState({isSignedIn : false});
+    //   this.setState({page : 'sign in'});
+    // }
   };
 
-  goToRegisterPage = () => {
-    this.setState({page: 'register'});
-  };
+  // goToRegisterPage = () => {
+  //   this.setState({page: 'register'});
+  // };
 
   loadUser = (data) => {
-    const { id, name, email, password, entries, joined } = data;
-    this.setState({user: {
+    const {id, name, email, password, entries, joined} = data;
+    this.setState({
+      user: {
         id: id,
         name: name,
         email: email,
         signInPassword: password,
         entries: entries,
         joined: joined
-      }, imageUrl: ''});
+      }, imageUrl: ''
+    });
   };
 
   render() {
-    const {imageUrl, box, isSignedIn, page, user } = this.state;
+    const {imageUrl, box, isSignedIn, page, user} = this.state;
+    const {onPageChange, goToRegisterPage, loadUser, onButtonClick, onInputChange} = this;
     return (
       <div>
         <Particles className='particles' params={particleOptions}/>
-        {!isSignedIn && page==='sign in'
-          ? <Signin onPageChange={this.onPageChange} goToRegisterPage={this.goToRegisterPage} loadUser={this.loadUser} />
-          : !isSignedIn && page==='register'
-          ? <Register onPageChange={this.onPageChange} loadUser={this.loadUser}/>
-          :  <div>
-              <Navigation onPageChange={this.onPageChange} />
-              <Logo />
+        <Navigation onPageChange={onPageChange} isSignedIn={isSignedIn}/>
+        {!isSignedIn && page === 'sign out' ?
+          <Signin onPageChange={onPageChange} loadUser={loadUser}/>
+          : !isSignedIn && page === 'register' ?
+            <Register onPageChange={onPageChange} loadUser={loadUser}/> :
+            <div>
+              <Logo/>
               <Entry name={user.name} entries={user.entries}/>
-              <ImageUrlInput onInputChange={this.onInputChange} onButtonClick={this.onButtonClick} />
-              <FaceRecognition imageUrl={imageUrl} box={box} />
+              <ImageUrlInput onInputChange={onInputChange} onButtonClick={onButtonClick}/>
+              <FaceRecognition imageUrl={imageUrl} box={box}/>
             </div>
         }
       </div>

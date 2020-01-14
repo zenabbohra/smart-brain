@@ -4,7 +4,7 @@ const Entry = ({ name, entries }) => {
   return(
     <div className='f4'>
       <p className='center i'>{`${name}, your entry count is `}</p>
-      <p className='f2 tc'>{`${entries}`}</p>
+      <p className='f3 tc'>{`${entries}`}</p>
     </div>
   );
 };

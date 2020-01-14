@@ -34,7 +34,7 @@ class Signin extends Component {
         if(user.id){
           console.log(user);
           loadUser(user);
-          onPageChange();
+          onPageChange('home');
         }
       })
       .catch(err => console.log(err));
@@ -45,7 +45,7 @@ class Signin extends Component {
     const { onEmailInputChange, onPasswordInputChange } = this;
 
     return (
-      <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center" style={{"margin-top": '10rem'}}>
+      <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center" style={{"margin-top": '8rem'}}>
         <main className="pa4 black-80">
           <div className="measure">
             <legend className="center f4 fw6 ph0 mh0">Sign In</legend>
@@ -78,7 +78,7 @@ class Signin extends Component {
               />
             </div>
             <div className="tc lh-copy mt3">
-              <p onClick={this.props.goToRegisterPage} className="f6 link dim black db">Register</p>
+              <p onClick={() => this.props.onPageChange('register')} className="f6 link dim black db">Register</p>
             </div>
           </div>
         </main>
