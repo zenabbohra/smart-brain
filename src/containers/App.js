@@ -127,12 +127,12 @@ class App extends Component {
 
   render() {
     const {imageUrl, box, isSignedIn, page, user} = this.state;
-    const {onPageChange, goToRegisterPage, loadUser, onButtonClick, onInputChange} = this;
+    const {onPageChange, loadUser, onButtonClick, onInputChange} = this;
     return (
       <div>
         <Particles className='particles' params={particleOptions}/>
         <Navigation onPageChange={onPageChange} isSignedIn={isSignedIn}/>
-        {!isSignedIn && page === 'sign out' ?
+        {!isSignedIn && (page === 'sign out' || page === 'sign in') ?
           <Signin onPageChange={onPageChange} loadUser={loadUser}/>
           : !isSignedIn && page === 'register' ?
             <Register onPageChange={onPageChange} loadUser={loadUser}/> :
