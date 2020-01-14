@@ -4,26 +4,45 @@ class Signin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: ''
+      signInEmail: '',
+      signInPassword: ''
     }
   }
 
   onEmailInputChange = (event) => {
-    this.setState({email: event.target.value});
+    this.setState({signInEmail: event.target.value});
   };
 
   onPasswordInputChange = (event) => {
-    this.setState({password: event.target.value});
+    this.setState({signInPassword: event.target.value});
   };
 
   onSigninButtonClick = () => {
-    const { onPageChange } = this.props;
-    onPageChange();
+    const { onPageChange, loadUser } = this.props;
+    const { signInEmail, signInPassword } = this.state;
+
+    fetch('http://localhost:3000/signin', {
+      method: 'POST',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify({
+        email: signInEmail,
+        password: signInPassword
+      })
+    })
+      .then(response => response.json())
+      .then(user => {
+        if(user.id){
+          console.log(user);
+          loadUser(user);
+          onPageChange();
+        }
+      })
+      .catch(err => console.log(err));
+
   };
 
   render() {
-    const { onEmailInputChange, onPasswordInputChange } = this.state;
+    const { onEmailInputChange, onPasswordInputChange } = this;
 
     return (
       <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center" style={{"margin-top": '10rem'}}>

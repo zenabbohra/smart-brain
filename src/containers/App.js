@@ -44,8 +44,8 @@ class App extends Component {
       page: 'sign in',
       user: {
         name: '',
-        email: '',
-        password: '',
+        signInEmail: '',
+        signInPassword: '',
         entries: 0,
         joined_date: new Date()
       }
@@ -76,6 +76,8 @@ class App extends Component {
 
   onButtonClick = () => {
     this.setState({imageUrl: this.state.input});
+
+    //detecting the face using clarifai API
     app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
       .then(response => {
         this.displayFaceBox(this.calculateFaceDim(response));
@@ -83,6 +85,20 @@ class App extends Component {
       .catch(err => {
         console.log(err);
       });
+
+    //Updating the entry count each time the button is clicked
+    fetch('http://localhost:3000/image', {
+      method: 'PUT',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        id: this.state.user.id
+      })
+    })
+      .then(response => response.json())
+      .then(count => {
+        this.setState(Object.assign(this.state.user, {entries: count}))
+      })
+      .catch(err => console.log(err))
   };
 
   onPageChange = () => {
@@ -101,13 +117,16 @@ class App extends Component {
     this.setState({page: 'register'});
   };
 
-  loadUser = (reg_name, reg_email, reg_password) => {
+  loadUser = (data) => {
+    const { id, name, email, password, entries, joined } = data;
     this.setState({user: {
-        name: reg_name,
-        email: reg_email,
-        password: reg_password
-      }});
-    console.log(this.state.user);
+        id: id,
+        name: name,
+        email: email,
+        signInPassword: password,
+        entries: entries,
+        joined: joined
+      }, imageUrl: ''});
   };
 
   render() {
@@ -116,7 +135,7 @@ class App extends Component {
       <div>
         <Particles className='particles' params={particleOptions}/>
         {!isSignedIn && page==='sign in'
-          ? <Signin onPageChange={this.onPageChange} goToRegisterPage={this.goToRegisterPage} />
+          ? <Signin onPageChange={this.onPageChange} goToRegisterPage={this.goToRegisterPage} loadUser={this.loadUser} />
           : !isSignedIn && page==='register'
           ? <Register onPageChange={this.onPageChange} loadUser={this.loadUser}/>
           :  <div>

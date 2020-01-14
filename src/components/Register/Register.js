@@ -4,35 +4,50 @@ class Register extends Component {
   constructor(props) {
     super(props);
     this.state ={
-      name: '',
-      email: '',
-      password: ''
+      registerName: '',
+      registerEmail: '',
+      registerPassword: ''
     }
 }
 
   onNameInputChange = (event) => {
-    this.setState({name: event.target.value});
+    this.setState({registerName: event.target.value});
   };
 
   onEmailInputChange = (event) => {
-    this.setState({email: event.target.value});
+    this.setState({registerEmail: event.target.value});
   };
 
   onPasswordInputChange = (event) => {
-    this.setState({password: event.target.value});
+    this.setState({registerPassword: event.target.value});
   };
 
   onRegisterClick = () => {
     const { onPageChange, loadUser } = this.props;
-    const { name, email, password } = this.state;
-    console.log(name, email, password);
-    onPageChange();
-    loadUser(name, email, password);
+    const { registerName, registerEmail, registerPassword } = this.state;
+    fetch('http://localhost:3000/register', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body:JSON.stringify({
+        name: registerName,
+        email: registerEmail,
+        password: registerPassword
+      })
+    })
+      .then(response => response.json())
+      .then(user => {
+        if(user.id){
+          onPageChange();
+          loadUser(user);
+        }else{
+          user.status(400).json('Incorrect inputs')
+        }
+      })
+      .catch(err=> console.log("couldn't register"));
   };
 
   render() {
-
-    const { onNameInputChange, onEmailInputChange, onPasswordInputChange } = this.state;
+    const { onNameInputChange, onEmailInputChange, onPasswordInputChange } = this;
 
     return(
       <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center" style={{"margin-top": '10rem'}}>
