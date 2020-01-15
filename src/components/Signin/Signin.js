@@ -21,7 +21,7 @@ class Signin extends Component {
     const { onPageChange, loadUser } = this.props;
     const { signInEmail, signInPassword } = this.state;
 
-    fetch('http://localhost:3000/signin', {
+    fetch('https://face-detect-zenab.herokuapp.com/signin', {
       method: 'POST',
       headers: {'Content-Type' : 'application/json'},
       body: JSON.stringify({
@@ -32,7 +32,6 @@ class Signin extends Component {
       .then(response => response.json())
       .then(user => {
         if(user.id){
-          console.log(user);
           loadUser(user);
           onPageChange('home');
         }

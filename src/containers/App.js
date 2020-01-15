@@ -87,7 +87,7 @@ class App extends Component {
       });
 
     //Updating the entry count each time the button is clicked
-    fetch('http://localhost:3000/image', {
+    fetch('https://face-detect-zenab.herokuapp.com/image', {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({

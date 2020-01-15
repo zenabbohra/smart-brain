@@ -25,7 +25,7 @@ class Register extends Component {
   onRegisterClick = () => {
     const { onPageChange, loadUser } = this.props;
     const { registerName, registerEmail, registerPassword } = this.state;
-    fetch('http://localhost:3000/register', {
+    fetch('https://face-detect-zenab.herokuapp.com/register', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body:JSON.stringify({
