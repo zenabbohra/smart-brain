@@ -24,7 +24,7 @@ class App extends Component {
     this.state = {
       imageUrl: '',
       input: '',
-      box: {},
+      box: [],
       isSignedIn: false,
       page: 'sign in',
       user: {
@@ -38,16 +38,20 @@ class App extends Component {
   }
 
   calculateFaceDim = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById('inputimage');
+    let arrOfRegions = [];
+    const image = document.getElementById("inputimage");
     const width = Number(image.width);
     const height = Number(image.height);
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
+    for (let faceRegion of data.outputs[0].data.regions) {
+      arrOfRegions.push({
+        leftCol: faceRegion.region_info.bounding_box.left_col * width,
+        topRow: faceRegion.region_info.bounding_box.top_row * height,
+        rightCol: width - faceRegion.region_info.bounding_box.right_col * width,
+        bottomRow: height - faceRegion.region_info.bounding_box.bottom_row * height,
+      })
     }
+
+    return arrOfRegions;
 
   };
 
