@@ -3,11 +3,12 @@ import React from 'react';
 const ImageUrlInput = ({ onInputChange, onButtonClick }) => {
   return(
     <div className='tc'>
-      <p className='f4 black-70'>This Magic Brain will detect faces in your pictures. Git it a try. </p>
+      <p className='f4'>This Magic Brain will detect faces in your pictures. Git it a try. </p>
       <input
-        className='pa1 w-30-l shadow-5 bw1 b--white'
+        className='pa1 w-30-l shadow-5 bw1 bw2'
+        style={{borderOpacity:'1', borderColor:'#f7f3f300'}}
         type='text'
-        placeholder='Insert face image url here'
+        placeholder='Insert an image url here (preferably a face)'
         onChange={onInputChange}
       />
       <button
