@@ -10,28 +10,13 @@ import Clarifai from 'clarifai';
 import Signin from '../components/Signin/Signin';
 import Register from '../components/Register/Register';
 import Entry from '../components/Entry/Entry';
+import config from './particlesjs-config';
 
 const app = new Clarifai.App({
   apiKey: 'de40d02dd82d4e4b826194bf1a7dfe20'
 });
-const particleOptions = {
-  "particles": {
-    "number": {
-      "value": 100
-    },
-    "size": {
-      "value": 3
-    }
-  },
-  "interactivity": {
-    "events": {
-      "onhover": {
-        "enable": true,
-        "mode": "repulse"
-      }
-    }
-  }
-};
+
+const particleOptions = config;
 
 class App extends Component {
   constructor(props) {
