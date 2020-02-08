@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 class Signin extends Component {
   constructor(props) {
     super(props);
     this.state = {
       signInEmail: '',
-      signInPassword: ''
+      signInPassword: '',
+      loading: false,
+      signInError: null
     }
   }
 
@@ -17,13 +19,19 @@ class Signin extends Component {
     this.setState({signInPassword: event.target.value});
   };
 
-  onSigninButtonClick = () => {
-    const { onPageChange, loadUser } = this.props;
-    const { signInEmail, signInPassword } = this.state;
+  // showLoading = (bool) => {
+  //   this.setState({loading: bool});
+  //   console.log('loading', this.state.loading);
+  // };
+
+  onSignInButtonClick = () => {
+    const {onPageChange, loadUser} = this.props;
+    const {signInEmail, signInPassword} = this.state;
+    this.setState({loading: true, signInError: null});
 
     fetch('https://face-detect-zenab.herokuapp.com/signin', {
       method: 'POST',
-      headers: {'Content-Type' : 'application/json'},
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         email: signInEmail,
         password: signInPassword
@@ -31,18 +39,23 @@ class Signin extends Component {
     })
       .then(response => response.json())
       .then(user => {
-        if(user.id){
+        if (user.id) {
           loadUser(user);
           onPageChange('home');
+        } else {
+          const error = user;
+          console.log(error);
+          this.setState({signInError: error, loading: false});
         }
       })
-      .catch(err => console.log(err));
-
+      .catch(err => {
+        console.log('err',err);
+        this.setState({signInError: 'Unexpected error, please try again', loading: false});
+      });
   };
 
   render() {
-    const { onEmailInputChange, onPasswordInputChange } = this;
-
+    const {onEmailInputChange, onPasswordInputChange, state: {loading, signInError}} = this;
     return (
       <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center" style={{"marginTop": '8rem'}}>
         <main className="pa4 black-80">
@@ -72,17 +85,19 @@ class Signin extends Component {
               <input
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                 type="submit"
-                value="Sign in"
-                onClick={this.onSigninButtonClick}
+                value={loading ? "Signing in" : "Sign in"}
+                disabled={loading}
+                onClick={this.onSignInButtonClick}
               />
             </div>
             <div className="tc lh-copy mt3">
               <p onClick={() => this.props.onPageChange('register')} className="f6 link dim black db">Register</p>
             </div>
+            <p className="tc lh-copy mt3">{signInError}</p>
           </div>
         </main>
       </article>
-  );
+    );
   }
 }
 

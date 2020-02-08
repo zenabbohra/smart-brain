@@ -6,7 +6,9 @@ class Register extends Component {
     this.state ={
       registerName: '',
       registerEmail: '',
-      registerPassword: ''
+      registerPassword: '',
+      loading: false,
+      registerError: null
     }
 }
 
@@ -25,6 +27,8 @@ class Register extends Component {
   onRegisterClick = () => {
     const { onPageChange, loadUser } = this.props;
     const { registerName, registerEmail, registerPassword } = this.state;
+    this.setState({loading: 'true', registerError: null });
+
     fetch('https://face-detect-zenab.herokuapp.com/register', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
@@ -40,15 +44,20 @@ class Register extends Component {
           onPageChange('home');
           loadUser(user);
         }else{
-          user.status(400).json('Incorrect inputs')
+          const error = user;
+          // res.status(400).json('Incorrect input');
+          console.log(error);
+          this.setState({loading: false, registerError: error});
         }
       })
-      .catch(err=> console.log("couldn't register", err));
-  };
+      .catch((err) => {
+        console.log("err", err);
+        this.setState({loading: false, registerError: 'Unexpected error occurred, try again'});
+      })
+      };
 
   render() {
-    const { onNameInputChange, onEmailInputChange, onPasswordInputChange } = this;
-
+    const { onNameInputChange, onEmailInputChange, onPasswordInputChange, state: { loading, registerError } } = this;
     return(
       <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center" style={{"marginTop": '8rem'}}>
         <main className="pa4 black-80">
@@ -89,11 +98,13 @@ class Register extends Component {
             <div className="tc lh-copy mt3">
               <input
                 type='submit'
-                value="Register"
+                value={loading ? 'Creating account' : 'Register'}
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
+                disabled={loading}
                 onClick={this.onRegisterClick}
               />
             </div>
+            <p className="tc lh-copy mt3">{registerError}</p>
           </div>
         </main>
       </article>
