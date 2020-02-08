@@ -37,6 +37,10 @@ class App extends Component {
     }
   }
 
+  componentDidMount() {
+    fetch('https://face-detect-zenab.herokuapp.com/');
+  }
+
   calculateFaceDim = (data) => {
     let arrOfRegions = [];
     const image = document.getElementById("inputimage");
@@ -50,9 +54,7 @@ class App extends Component {
         bottomRow: height - faceRegion.region_info.bounding_box.bottom_row * height,
       })
     }
-
     return arrOfRegions;
-
   };
 
   displayFaceBox = (boundingBox) => {
@@ -114,26 +116,25 @@ class App extends Component {
     });
   };
 
+
   render() {
     const {imageUrl, box, isSignedIn, page, user} = this.state;
     const {onPageChange, loadUser, onButtonClick, onInputChange} = this;
-    return (
-      <div>
-        <Particles className='particles' params={particleOptions}/>
-        <Navigation onPageChange={onPageChange} isSignedIn={isSignedIn}/>
-        {!isSignedIn && (page === 'sign out' || page === 'sign in') ?
-          <Signin onPageChange={onPageChange} loadUser={loadUser}/>
-          : !isSignedIn && page === 'register' ?
-            <Register onPageChange={onPageChange} loadUser={loadUser}/> :
-            <div>
-              <Logo/>
-              <Entry name={user.name} entries={user.entries}/>
-              <ImageUrlInput onInputChange={onInputChange} onButtonClick={onButtonClick}/>
-              <FaceRecognition imageUrl={imageUrl} box={box}/>
-            </div>
-        }
-      </div>
-    );
+    return <div>
+      <Particles className='particles' params={particleOptions}/>
+      <Navigation onPageChange={onPageChange} isSignedIn={isSignedIn}/>
+      {!isSignedIn && (page === 'sign out' || page === 'sign in') ?
+        <Signin onPageChange={onPageChange} loadUser={loadUser}/>
+        : !isSignedIn && page === 'register' ?
+        <Register onPageChange={onPageChange} loadUser={loadUser} /> :
+        <div>
+          <Logo/>
+          <Entry name={user.name} entries={user.entries}/>
+          <ImageUrlInput onInputChange={onInputChange} onButtonClick={onButtonClick}/>
+          <FaceRecognition imageUrl={imageUrl} box={box}/>
+        </div>
+      }
+    </div>;
   }
 }
 
