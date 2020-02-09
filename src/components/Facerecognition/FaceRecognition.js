@@ -2,8 +2,6 @@ import React from 'react';
 import './FaceRecognition.css';
 
 const FaceRecognition = ({ imageUrl, box }) => {
-  // const { topRow, rightCol, bottomRow, leftCol } = box;
-
   return(
     <div className='center'>
       <div className='mt2 tc' style={{'position':"relative"}}>
@@ -28,8 +26,8 @@ const FaceRecognition = ({ imageUrl, box }) => {
                 }}
               />
             )
-          })
-          : ''}
+          }): ''
+        }
       </div>
     </div>
   );

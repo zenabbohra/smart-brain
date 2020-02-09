@@ -27,6 +27,7 @@ class App extends Component {
       box: [],
       isSignedIn: false,
       page: 'sign in',
+      imageInputError: null,
       user: {
         name: '',
         signInEmail: '',
@@ -66,30 +67,42 @@ class App extends Component {
   };
 
   onButtonClick = () => {
-    this.setState({imageUrl: this.state.input});
+    this.setState({imageUrl: this.state.input, imageInputError: null});
 
-    //detecting the face using clarifai API
-    app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then(response => {
-        this.displayFaceBox(this.calculateFaceDim(response));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-
-    //Updating the entry count each time the button is clicked
-    fetch('https://face-detect-zenab.herokuapp.com/image', {
-      method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        id: this.state.user.id
-      })
-    })
-      .then(response => response.json())
-      .then(count => {
-        this.setState(Object.assign(this.state.user, {entries: count}))
-      })
-      .catch(err => console.log(err))
+    if(this.state.input){
+      //detecting the face using clarifai API
+      app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+        .then(response => {
+          const boundingBox = this.calculateFaceDim(response);
+          this.displayFaceBox(boundingBox);
+          return boundingBox;
+        })
+        .then(boundingBox => {
+          if(boundingBox) {
+            this.setState({imageInputError: ''});
+            //Updating the entry count each time the button is clicked
+            fetch('https://face-detect-zenab.herokuapp.com/image', {
+              method: 'PUT',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({
+                id: this.state.user.id
+              })
+            })
+              .then(response => response.json())
+              .then(count => {
+                this.setState(Object.assign(this.state.user, {entries: count}))
+              })
+              .catch(err => console.log('entry count error', err))
+          }
+          else console.log('no box dimension returned');
+        })
+        .catch(err => {
+            this.setState({imageInputError : 'Bad image url provided', box: ''});
+            console.log('Bad image url provided', err);
+        });
+    } else{
+      this.setState({imageInputError: 'No image url provided', box: ''})
+    }
   };
 
   onPageChange = (page) => {
@@ -118,7 +131,7 @@ class App extends Component {
 
 
   render() {
-    const {imageUrl, box, isSignedIn, page, user} = this.state;
+    const {imageUrl, box, isSignedIn, page, user, imageInputError} = this.state;
     const {onPageChange, loadUser, onButtonClick, onInputChange} = this;
     return <div>
       <Particles className='particles' params={particleOptions}/>
@@ -130,7 +143,7 @@ class App extends Component {
         <div>
           <Logo/>
           <Entry name={user.name} entries={user.entries}/>
-          <ImageUrlInput onInputChange={onInputChange} onButtonClick={onButtonClick}/>
+          <ImageUrlInput onInputChange={onInputChange} onButtonClick={onButtonClick} imageInputError={imageInputError}/>
           <FaceRecognition imageUrl={imageUrl} box={box}/>
         </div>
       }

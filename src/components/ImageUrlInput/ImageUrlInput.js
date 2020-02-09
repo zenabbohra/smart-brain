@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ImageUrlInput = ({ onInputChange, onButtonClick }) => {
+const ImageUrlInput = ({ onInputChange, onButtonClick, imageInputError }) => {
   return(
     <div className='tc'>
       <p className='f4'>This Magic Brain will detect faces in your pictures. Git it a try. </p>
@@ -15,6 +15,7 @@ const ImageUrlInput = ({ onInputChange, onButtonClick }) => {
         className="f6 link dim ph3 pv2 mb2 dib white bg-light-purple"
         onClick={onButtonClick}
       >Detect</button>
+      <p className="tc lh-copy mt3">{imageInputError}</p>
     </div>
   );
 };
