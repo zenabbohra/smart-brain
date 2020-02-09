@@ -27,7 +27,7 @@ class Register extends Component {
   onRegisterClick = () => {
     const { onPageChange, loadUser } = this.props;
     const { registerName, registerEmail, registerPassword } = this.state;
-    this.setState({loading: 'true', registerError: null });
+    this.setState({loading: true, registerError: null });
 
     fetch('https://face-detect-zenab.herokuapp.com/register', {
       method: 'POST',
@@ -45,9 +45,7 @@ class Register extends Component {
           loadUser(user);
         }else{
           const error = user;
-          // res.status(400).json('Incorrect input');
-          console.log(error);
-          this.setState({loading: false, registerError: error});
+          this.setState({loading: false, registerError: error.err});
         }
       })
       .catch((err) => {
