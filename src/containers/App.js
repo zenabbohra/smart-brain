@@ -68,7 +68,6 @@ class App extends Component {
 
   onButtonClick = () => {
     this.setState({imageUrl: this.state.input, imageInputError: null});
-
     if(this.state.input){
       //detecting the face using clarifai API
       app.models.predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
@@ -79,7 +78,6 @@ class App extends Component {
         })
         .then(boundingBox => {
           if(boundingBox) {
-            this.setState({imageInputError: ''});
             //Updating the entry count each time the button is clicked
             fetch('https://face-detect-zenab.herokuapp.com/image', {
               method: 'PUT',
@@ -125,7 +123,9 @@ class App extends Component {
         signInPassword: password,
         entries: entries,
         joined: joined
-      }, imageUrl: ''
+      },
+      imageUrl: '',
+      imageInputError: null
     });
   };
 
