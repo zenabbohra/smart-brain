@@ -1,5 +1,7 @@
 # Smart-Brain
-A simple web app that uses [ClariFai API](https://docs.clarifai.com/) to detect faces in the image provided.
+A [web app detects faces in images](https://zenabbohra.github.io/smart-brain/) by using [ClariFai API](https://docs.clarifai.com/).
+
+![alt text](smart-brain-demo.png)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
